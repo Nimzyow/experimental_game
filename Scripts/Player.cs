@@ -6,14 +6,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // config 
     [SerializeField] float runSpeed = 5f;
 
-    Rigidbody2D myRigidBody;
+    //state
+    bool isAlive = true;
 
-    // Start is called before the first frame update
+    //cached component references
+    Rigidbody2D myRigidBody;
+    Animator myAnimator;
+
+    // Message then methods
     void Start()
     {
         myRigidBody = GetComponent<Rigidbody2D>();
+        myAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -28,6 +35,9 @@ public class Player : MonoBehaviour
         float controlThrow = Input.GetAxis("Horizontal"); ;
         Vector2 playerVelocity = new Vector2(controlThrow * runSpeed, myRigidBody.velocity.y);
         myRigidBody.velocity = playerVelocity;
+
+        bool playerHasHorizontalSpeed = Mathf.Abs(myRigidBody.velocity.x) > Mathf.Epsilon;
+        myAnimator.SetBool("Running", playerHasHorizontalSpeed);
     }
 
     private void FlipSprite()
